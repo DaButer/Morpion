@@ -7,6 +7,9 @@ pygame.init()
 
 ###DEFINITION DE LA FENETRE DE JEU, DE SES DIMENSIONS ET DE SON ECRITAU
 LONGUEUR = 600
+LONGUEUR2 = LONGUEUR // 3 + 9
+LONGUEUR3 = 2 * LONGUEUR // 3 + 13
+LONGUEUR4 = LONGUEUR // 3 + 14
 WINDOW = pygame.display.set_mode((LONGUEUR, LONGUEUR))
 pygame.display.set_caption("Jeu de morpion")
 
@@ -94,14 +97,14 @@ class Hitbox():
 
 ###DECLARATION DE L'APPARTENANCE DES HITBOX A LA CLASSE Hitbox
 UL_hitbox = Hitbox(0, 0, UP_LEFT)
-UM_hitbox = Hitbox(LONGUEUR // 3 +9, 0, UP_MIDDLE)
-UR_hitbox = Hitbox(2 * LONGUEUR // 3 + 13, 0, UP_RIGHT)
-ML_hitbox = Hitbox(0, LONGUEUR // 3 + 14, MIDDLE_LEFT)
-MM_hitbox = Hitbox(LONGUEUR // 3 + 14, LONGUEUR // 3 + 14, MIDDLE_MIDDLE)
-MR_hitbox = Hitbox(2 * LONGUEUR // 3 + 13, LONGUEUR // 3 + 14, MIDDLE_RIGHT)
-DL_hitbox = Hitbox(0, 2 * LONGUEUR // 3 + 13, DOWN_LEFT) 
-DM_hitbox = Hitbox(LONGUEUR // 3 + 9, 2 * LONGUEUR // 3 + 13, DOWN_MIDDLE)
-DR_hitbox = Hitbox(2 * LONGUEUR // 3 + 13, 2 * LONGUEUR // 3 + 13, DOWN_RIGHT)
+UM_hitbox = Hitbox(LONGUEUR2, 0, UP_MIDDLE)
+UR_hitbox = Hitbox(LONGUEUR3, 0, UP_RIGHT)
+ML_hitbox = Hitbox(0, LONGUEUR4, MIDDLE_LEFT)
+MM_hitbox = Hitbox(LONGUEUR4, LONGUEUR4, MIDDLE_MIDDLE)
+MR_hitbox = Hitbox(LONGUEUR3, LONGUEUR4, MIDDLE_RIGHT)
+DL_hitbox = Hitbox(0, LONGUEUR3, DOWN_LEFT) 
+DM_hitbox = Hitbox(LONGUEUR2, LONGUEUR3, DOWN_MIDDLE)
+DR_hitbox = Hitbox(LONGUEUR3, LONGUEUR3, DOWN_RIGHT)
 
 ###DECLARATION DE LA FONCTION QUI AFFICHE LE TEXTE EN CAS DE VICTOIRE###
 def draw_winner(text):
@@ -149,6 +152,10 @@ def main():
         
         if UL + UM + UR == 3 or ML + MM + MR == 3 or DL + DM + DR == 3 or UL + ML + DL == 3 or UM + MM + DM == 3 or UR + MR + DR == 3 or UL + MM + DR == 3 or UR + MM + DL == 3:
             winner_text = "LES CERCLES ONT GAGNÉ"
+        
+        if tour == 10:
+            winner_text = "EGALITE"
+        
         ###APPELLE LA FONCTION QUI AFFICHE LE TEXTE EN CAS DE VICTOIRE
         if winner_text != "":
             draw_winner(winner_text)
@@ -226,44 +233,44 @@ def main():
             CIRCLE1.draw(0, 0)
         #HAUT MILIEU
         if UM == 10:
-            CROSS2.draw(LONGUEUR // 3 + 9, 0)
+            CROSS2.draw(LONGUEUR2, 0)
         if UM == 1:
-            CIRCLE2.draw(LONGUEUR // 3 + 9, 0)        
+            CIRCLE2.draw(LONGUEUR2, 0)        
         #HAUT DROITE
         if UR == 10:
-            CROSS1.draw(2 * LONGUEUR // 3 + 13, 0)
+            CROSS1.draw(LONGUEUR3, 0)
         if UR == 1:
-            CIRCLE1.draw(2 * LONGUEUR // 3 + 13, 0)
+            CIRCLE1.draw(LONGUEUR3, 0)
         #MILIEU GAUCHE
         if ML == 10:
-            CROSS3.draw(0, LONGUEUR // 3 + 14)
+            CROSS3.draw(0, LONGUEUR4)
         if ML == 1:
-            CIRCLE3.draw(0, LONGUEUR //3 + 14)
+            CIRCLE3.draw(0, LONGUEUR4)
         #MILIEU MILIEU
         if MM == 10:
-            CROSS4.draw(LONGUEUR // 3 + 14, LONGUEUR // 3 + 14)
+            CROSS4.draw(LONGUEUR4, LONGUEUR4)
         if MM == 1:
-            CIRCLE4.draw(LONGUEUR // 3 + 14, LONGUEUR // 3 + 14) 
+            CIRCLE4.draw(LONGUEUR4, LONGUEUR4) 
         #MILIEU DROITE
         if MR == 10:
-            CROSS3.draw(2 * LONGUEUR // 3 + 13, LONGUEUR // 3 + 14)
+            CROSS3.draw(LONGUEUR3, LONGUEUR4)
         if MR == 1:
-            CIRCLE3.draw(2 * LONGUEUR // 3 + 13, LONGUEUR // 3 + 14)
+            CIRCLE3.draw(LONGUEUR3, LONGUEUR4)
         #BAS GAUCHE
         if DL == 10:
-            CROSS1.draw(0, 2 * LONGUEUR // 3 + 13)
+            CROSS1.draw(0, LONGUEUR3)
         if DL == 1:
-            CIRCLE1.draw(0, 2 * LONGUEUR // 3 + 13)
+            CIRCLE1.draw(0, LONGUEUR3)
         #BAS MILIEU
         if DM == 10:
-            CROSS2.draw(LONGUEUR // 3 + 9, 2 * LONGUEUR // 3 + 13)
+            CROSS2.draw(LONGUEUR2, LONGUEUR3)
         if DM == 1:
-            CIRCLE2.draw(LONGUEUR // 3 + 9, 2 * LONGUEUR // 3 + 13)
+            CIRCLE2.draw(LONGUEUR2, LONGUEUR3)
         #BAS DROITE
         if DR == 10:
-            CROSS1.draw(2 * LONGUEUR // 3 + 13, 2 * LONGUEUR // 3 + 13)
+            CROSS1.draw(LONGUEUR3, LONGUEUR3)
         if DR == 1:
-            CIRCLE1.draw(2 * LONGUEUR // 3 + 13, 2 * LONGUEUR // 3 + 13)
+            CIRCLE1.draw(LONGUEUR3, LONGUEUR3)
         ###SI LA CROIX EST CLIQUEE, LE PROGRAMME SE FERME
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
