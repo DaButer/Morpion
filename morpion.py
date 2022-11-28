@@ -16,18 +16,20 @@ pygame.display.set_caption("Jeu de morpion")
 ###DEFINITION DES FPS ET DU SYSTEME DE TOUR###
 
 FPS = 30
-TOUR = [0]
+
 
 ###DEFINITION DE LA VARIABLE DE COULEUR
 PURPLE = (128, 0, 128)
+RED = (255, 0, 0)
 
 ###DEFINITION DE L'APPARENCE DE LA POLICE D'ECRITURE DU GAGNANT ET DE LA TAILLE DE POLICE
 WINNER_FONT = pygame.font.SysFont('comicsansms', 45)
-
+RESTART_FONT = pygame.font.SysFont('comicsans', 10)
+QUIT_FONT = pygame.font.SysFont('comicsans', 10)
 ###IMPORTATION DES IMAGES DE LA GRILLE ET DE L ECRAN DE FIN###
 
 END_SCREEN = pygame.image.load(
-    os.path.join('end_screen.png')
+    os.path.join('end_screen copy.png')
 )
 ###IMPORATION DE LA GRILLE + REDIMENSSION DE CELLE-CI AUX DIMENSIONS DE LA FENETRE
 GRID = pygame.transform.scale(
@@ -65,6 +67,8 @@ MIDDLE_RIGHT = pygame.image.load('pixil-frame-6.png').convert_alpha()
 DOWN_LEFT = pygame.image.load('pixil-frame-7.png').convert_alpha()
 DOWN_MIDDLE = pygame.image.load('pixil-frame-8.png').convert_alpha()
 DOWN_RIGHT = pygame.image.load('pixil-frame-9.png').convert_alpha()
+BOUTON_RESTART = pygame.image.load('bouton rejouer.png').convert_alpha()
+BOUTON_QUITTER = pygame.image.load('bouton quitter.png').convert_alpha()
 
 ###DEFINITION DE LA CLASSE POUR LES HITBOXS DES CASES DE LA GRILLE
 class Hitbox():
@@ -105,6 +109,8 @@ MR_hitbox = Hitbox(LONGUEUR3, LONGUEUR4, MIDDLE_RIGHT)
 DL_hitbox = Hitbox(0, LONGUEUR3, DOWN_LEFT) 
 DM_hitbox = Hitbox(LONGUEUR2, LONGUEUR3, DOWN_MIDDLE)
 DR_hitbox = Hitbox(LONGUEUR3, LONGUEUR3, DOWN_RIGHT)
+RESTART_hitbox = Hitbox(200, 200, BOUTON_RESTART)
+QUITTER_hitbox = Hitbox(200, 400, BOUTON_QUITTER)
 
 ###DECLARATION DE LA FONCTION QUI AFFICHE LE TEXTE EN CAS DE VICTOIRE###
 def draw_winner(text):
@@ -116,9 +122,19 @@ def draw_winner(text):
     WINDOW.blit(winner_text, (LONGUEUR // 2 - winner_text.get_width() // 2, LONGUEUR // 2 - winner_text.get_height() // 2))
     pygame.display.update()
     ###LAISSE UN DELAI POUR QU'ON AI LE TEMPS DE LIRE CE QUI EST AFFICHE
-    pygame.time.delay(5000)
+    pygame.time.delay(1000)
     
 
+def menu_fin():
+    WINDOW.blit(END_SCREEN, (0, 0))
+    
+    while True:
+        if RESTART_hitbox.draw():
+            main()
+        if QUITTER_hitbox.draw():
+            pygame.quit()
+        pygame.display.update()
+            
 ###FONCTION PRINCIPALE
 def main():
     ###DEFINITION DE CE QUI PERMET DE SAVOIR SI LE PROGRAMME DOIT TOURNER ET A QUELLE FRAMERATE IL DOIT LE FAIRE
@@ -136,6 +152,8 @@ def main():
     DM = 0
     DR = 0
     
+    tour = 0
+    
     ###BOUCLE PRINCIPALE
     while run:
         ###FRAMERATE
@@ -143,22 +161,28 @@ def main():
         ###CE QUI EST AFFICHE A L'ECRAN (FOND BLANC + GRILLE)
         WINDOW.fill((255, 255, 255))
         WINDOW.blit(GRID, (0, 0))
-        ###VARIALE QUI PERMET DE DETERMINER LE TOUR
-        tour = len(TOUR)
+        
+        
         ###CONDITIONS DE VICTOIRE
         winner_text = ""
         if UL + UM + UR == 30 or ML + MM + MR == 30 or DL + DM + DR == 30 or UL + ML + DL == 30 or UM + MM + DM == 30 or UR + MR + DR == 30 or UL + MM + DR == 30 or UR + MM + DL == 30:
             winner_text = "LES CROIX ONT GAGNÉ"
+            
         
         if UL + UM + UR == 3 or ML + MM + MR == 3 or DL + DM + DR == 3 or UL + ML + DL == 3 or UM + MM + DM == 3 or UR + MR + DR == 3 or UL + MM + DR == 3 or UR + MM + DL == 3:
             winner_text = "LES CERCLES ONT GAGNÉ"
+            
         
-        if tour == 10:
+        if tour == 9:
             winner_text = "EGALITE"
-        
+            
+            
         ###APPELLE LA FONCTION QUI AFFICHE LE TEXTE EN CAS DE VICTOIRE
         if winner_text != "":
             draw_winner(winner_text)
+            WINDOW.blit(END_SCREEN, (0, 0))
+    
+            menu_fin()
             break
         ###VERIFICATION DE SI LES CASES SONT CLIQUEES A L'AIDE DE LA METHODE PRESENTE DANS LA CLASSE HITBOX; VARIABLE DIFFERENTE EN FONCTION DU TOUR + AUGMENTATION DE LA VALEUR DE TOUR
         ###HAUT GAUCHE
@@ -167,63 +191,63 @@ def main():
                 UL += 10    
             else:
                 UL += 1
-            TOUR.append(0)
+            tour += 1
         ###HAUT MILIEU
         if UM_hitbox.draw():
             if tour % 2 == 0:
                 UM += 10
             else:
                 UM += 1
-            TOUR.append(0)
+            tour += 1
         ###HAUT DROITE
         if UR_hitbox.draw():
             if tour % 2 == 0:
                 UR += 10
             else:
                 UR += 1
-            TOUR.append(0)
+            tour += 1 
         ###MILIEU GAUCHE
         if ML_hitbox.draw():
             if tour % 2 == 0:
                 ML += 10
             else:
                 ML += 1
-            TOUR.append(0)
+            tour += 1
         ###MILIEU MILIEU
         if MM_hitbox.draw():
             if tour % 2 == 0:
                 MM += 10
             else:
                 MM += 1
-            TOUR.append(0)
+            tour += 1
         ###MILIEU DROITE
         if MR_hitbox.draw():
             if tour % 2 == 0:
                 MR += 10
             else:
                 MR += 1
-            TOUR.append(0)
+            tour += 1
         ###BAS GAUCHE
         if DL_hitbox.draw():
             if tour % 2 == 0:
                 DL += 10
             else:
                 DL += 1
-            TOUR.append(0)
+            tour += 1
         ###BAS MILIEU
         if DM_hitbox.draw():
             if tour % 2 == 0:
                 DM += 10
             else:
                 DM += 1
-            TOUR.append(0)
+            tour += 1
         ###BAS DROITE
         if DR_hitbox.draw():
             if tour % 2 == 0:
                 DR += 10
             else:
                 DR += 1
-            TOUR.append(0)
+            tour += 1
         
         ###PERMET DE SAVOIR SI LES VALEURS ASSOCIEES AU HITBOX SONT DIFFERENTES DE 0, AFFICHE UNE CROIX OU UN CERCLE EN FONCTION DU TOUR
         ###HAUT GAUCHE
